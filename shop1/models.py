@@ -29,6 +29,8 @@ class order(models.Model):
     color = models.CharField("color", max_length=50, null=True, blank=True)
     size = models.CharField("size", max_length=50, null=True, blank=True)
 
+    payment= models.CharField("payment", max_length=500, default="no")
+
     def __str__(self):
         return self.ostat
 

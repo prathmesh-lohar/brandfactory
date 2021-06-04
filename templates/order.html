@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %}DreamH{% endblock %} {% block content %}
 
 
+
 <div class="container">
     <div class="row">
 
@@ -10,6 +11,8 @@
             <form method="POST" action="upload">
                 {% csrf_token %}
                 <input type="hidden" value="{{prod.pid}}" name="pid">
+
+                <input type="hidden" value="{{prod.price}}" name="amount">
 
 
 

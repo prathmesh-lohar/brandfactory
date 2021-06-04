@@ -2,8 +2,6 @@
 
 
 
-
-
 <div class="container my-1">
 
     <div class="row">
@@ -77,7 +75,10 @@
             <h1 class="h1 my-3">{{prod.pname}}</h1>
             <p class="my-3">Price : </p>
             <div style="color: #f50057;">
-                <b class="h4 ">Rs. {{prod.price}} /-  <i class="h4 mx-4"> Rs. <del>{{prod.dicount}}</del> <pree class="mx-5">  </preee>   With Free Shipping</i></b>
+                <b class="h4 ">Rs. {{prod.price}} /- <i class="h4 mx-4"> Rs. <del>{{prod.dicount}}</del>
+                        <pree class="mx-5">
+                            </preee> With Free Shipping
+                    </i></b>
             </div>
 
             <div class="variations my-2">
@@ -94,8 +95,10 @@
                 <p> {{prod.desc}}
             </div>
 
-            <a href="/order/{{prod.pid}}"><button id="sb{{prod.pid}}" class="btn primary-bg text-white my-5"> <span class="fa fa-cart-arrow-down"></span><pree>     </pree> Shop Now </button>
-                    </a>
+            <a href="/order/{{prod.pid}}"><button id="sb{{prod.pid}}" class="btn primary-bg text-white my-5"> <span class="fa fa-cart-arrow-down"></span>
+                    <pree> </pree> Shop Now
+                </button>
+            </a>
         </div>
 
 

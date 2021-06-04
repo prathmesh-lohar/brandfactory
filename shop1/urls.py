@@ -55,8 +55,8 @@ urlpatterns = [
     # Ai
 
     path("arg", views.arg, name="arg"),
-    path("pay", views.pay, name="pay"),
-    path("successpay", views.successpay, name="successpay"),
+    path("pay/<int:amount>", views.pay, name="pay"),
+    path("success", views.success, name="success"),
     
 
 

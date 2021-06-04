@@ -8,13 +8,15 @@ from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.csrf import csrf_exempt
 
-# email
-import os
-import socket
-import smtplib
-import ssl
+import razorpay
 
-# /EMAL
+# # email
+import os
+# import socket
+# import smtplib
+# import ssl
+
+# # /EMAL
 
 
 
@@ -112,9 +114,11 @@ def test2(request, pid):
 
 def order(request, pid):
     # prod.product.objects.filter(pid=pid)
-    prod = product.objects.filter(pid=pid)
+    
 
-    return render(request, "order.html", {'prod': prod[0]})
+        prod = product.objects.filter(pid=pid)
+
+        return render(request, "order.html", {'prod': prod[0]})
 
 
 def upload(request):
@@ -130,6 +134,7 @@ def upload(request):
         color = request.POST.get('color')
         size = request.POST.get('size')
         id = request.POST.get('pid')
+        amount = request.POST.get('amount')
 
         from .models import order
 
@@ -138,26 +143,29 @@ def upload(request):
         ord.save()
         str = name + '\n' + id + '\n' + no + '\n' + add + '\n' + \
             pinc + '\n' + cit + '\n' + hno + '\n' + quentity + '\n' + color + '\n' + size
-        # email
-        port = 465  # For SSL
-        smtp_server = "smtp.gmail.com"
-        sender_email = "ashukulkarni81@gmail.com"  # Enter your address
-        receiver_email = "loharprathmesh123@gmail.com"  # Enter receiver address
-        password = "ashuk1122"
+        # # email
+        # port = 465  # For SSL
+        # smtp_server = "smtp.gmail.com"
+        # sender_email = "ashukulkarni81@gmail.com"  # Enter your address
+        # receiver_email = "loharprathmesh123@gmail.com"  # Enter receiver address
+        # password = "ashuk1122"
 
-        message = str
+        # message = str
 
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, message)
+        # context = ssl.create_default_context()
+        # with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        #     server.login(sender_email, password)
+        #     server.sendmail(sender_email, receiver_email, message)
 
-        return HttpResponseRedirect('successpro')
+        re="/pay/"+amount
+        return HttpResponseRedirect(re)
 
     else:
         return render(request, "error.html")
 
-    return HttpResponseRedirect('successpro')
+    return HttpResponse("pay")
+
+    
 
 
 def successpro(request):
@@ -367,24 +375,29 @@ def arg(request):
     return HttpResponse("wait")
     
 
-def pay(request):
-    import razorpay
-    
-    # if request.method == "POST":
-    #     amount = 100
-    #     order_currency = 'INR'
-    #     client = razorpay.Client(auth=('rzp_test_dctyNizkWtLmce','AddvrbLrfDfJekyIHqxqPx3k'))
-    #     payment = client.order.create({'amount':amount,curency:'INR','payment_capture':'1'})
-    if request.method == "POST":
-        name = request.POST.get('name')
-        amount = 100
+def pay(request,amount):
+    import json
 
-        client = razorpay.Client(auth=("rzp_test_tfqXR9YdIr8lmy", "s2v1XMGnEOLAKlmtiVLr4Tmf"))
-        payment = client.order.create({'amount': amount, 'currency': 'INR','payment_capture': '1'})
+    if request.method == "POST":
         
-    return render(request, "pay.html")
+
+        amount = amount*100
+        client = razorpay.Client(auth =("rzp_test_J0Y0LwwxWL2t7H" , "cVong2geEtGbrVMNHcyQ9zeo"))
+        payment = client.order.create({'amount':amount, 'currency':'INR',
+                              'payment_capture':'1' })
+
+        from .models import order
+        order = order.objects.last()
+        print(order)
+        order.payment=amount
+        order.save()
+
+        return redirect("/order/successpro")
+    return render(request, "pay.html",{'amount':amount})
+
 
 @csrf_exempt
-def successpay(request):
+def success(request):
+    
     return HttpResponse('payment success')
     
